@@ -1,5 +1,4 @@
 import rom from 'rom'
-
 import fs from 'fs'
 
 let U = 3.0;
@@ -13,6 +12,11 @@ if(process.argv[2])
 
 const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
 
+const loadData = (path) => {
+  const data = fs.readFileSync(path).toString();
+  return data;
+}
+
 (async () => {
   var startInitialize = new Date().getTime();
 
@@ -20,31 +24,31 @@ const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
 
   const N_BC = 1;
 
-  const P = fs.readFileSync("data/matrices/P_mat.txt");
-  const M = fs.readFileSync("data/matrices/M_mat.txt");
-  const K = fs.readFileSync("data/matrices/K_mat.txt");
-  const B = fs.readFileSync("data/matrices/B_mat.txt");
-  const modes = fs.readFileSync('data/EigenModes_U_mat.txt');
-  const coeffL2 = fs.readFileSync('data/matrices/coeffL2_mat.txt');
-  const mu = fs.readFileSync('data/par.txt');
+  const P = loadData("data/matrices/P_mat.txt");
+  const M = loadData("data/matrices/M_mat.txt");
+  const K = loadData("data/matrices/K_mat.txt");
+  const B = loadData("data/matrices/B_mat.txt");
+  const modes = loadData('data/EigenModes_U_mat.txt');
+  const coeffL2 = loadData('data/matrices/coeffL2_mat.txt');
+  const mu = loadData('data/par.txt');
   const grid_data = fs.readFileSync('data/pitzDaily.vtu')
 
   const Nphi_u = B.split("\n").length;
   const Nphi_p = K.split("\n")[0].split(" ").length;
   const Nphi_nut = coeffL2.split("\n").length;
 
+  const reduced = new rom.reducedSteady(Nphi_u + Nphi_p, Nphi_u + Nphi_p);
 
   for (var i = 0; i < Nphi_u; i ++ ){	
-    const C = fs.readFileSync("data/matrices/C" + i + "_mat.txt");
-    const Ct1 = fs.readFileSync("data/matrices/ct1_" + i + "_mat.txt");
-    const Ct2 = fs.readFileSync("data/matrices/ct2_" + i + "_mat.txt");
+    const C = loadData("data/matrices/C" + i + "_mat.txt");
+    const Ct1 = loadData("data/matrices/ct1_" + i + "_mat.txt");
+    const Ct2 = loadData("data/matrices/ct2_" + i + "_mat.txt");
 
     reduced.addCMatrix(C, i);
     reduced.addCt1Matrix(Ct1, i);
     reduced.addCt2Matrix(Ct2, i);
   }
 
-  const reduced = new rom.reducedSteady(Nphi_u + Nphi_p, Nphi_u + Nphi_p);
 
   reduced.readUnstructuredGrid(grid_data);
 
