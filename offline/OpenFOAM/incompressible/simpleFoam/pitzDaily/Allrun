@@ -1,0 +1,38 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+JS_TEST=../../../../../tests/pitzDaily
+JS_TEST_DATA=${JS_TEST}/data
+JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
+
+#cleanCase
+#rm -r ITHACAoutput
+#blockMesh > log.blockMesh 2>&1
+#./run_offline.sh
+#foamJob -screen steady -create-rom
+#foamJob -screen steady -online -U 3.0 0.00001
+#touch ITHACAoutput/Offline/foam.foam
+#foamToVTK -ascii -time 0 -fields 'none' -no-point-data
+
+if [ ! -d $JS_TEST_DATA ];then
+  mkdir -p $JS_TEST_DATA
+fi
+
+if [ ! -d $JS_TEST_MATRICES ];then
+  mkdir -p $JS_TEST_MATRICES
+fi
+
+cp ITHACAoutput/Matrices/P_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/M_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/K_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/B_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/coeffL2_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/C/C*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/ct1/ct1*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/ct2/ct2*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Parameters/par.txt ${JS_TEST_DATA}/
+cp ITHACAoutput/POD/EigenModes_U_mat.txt ${JS_TEST_DATA}/
+cp VTK/*/internal.vtu ${JS_TEST_DATA}/pitzDaily.vtu
