@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd "${0%/*}" || exit                                # Run from this directory
 . ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
 . ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
@@ -8,14 +8,14 @@ JS_TEST=../../../../../tests/pitzDaily
 JS_TEST_DATA=${JS_TEST}/data
 JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
 
-#cleanCase
-#rm -r ITHACAoutput
-#blockMesh > log.blockMesh 2>&1
-#./run_offline.sh
-#foamJob -screen steady -create-rom
-#foamJob -screen steady -online -U 3.0 0.00001
-#touch ITHACAoutput/Offline/foam.foam
-#foamToVTK -ascii -time 0 -fields 'none' -no-point-data
+cleanCase
+rm -r ITHACAoutput
+blockMesh > log.blockMesh 2>&1
+./run_offline.sh
+foamJob -screen steady -create-rom
+foamJob -screen steady -online -U 3.0 0.00001
+touch ITHACAoutput/Offline/foam.foam
+foamToVTK -ascii -time 0 -fields 'none' -no-point-data
 
 if [ ! -d $JS_TEST_DATA ];then
   mkdir -p $JS_TEST_DATA
