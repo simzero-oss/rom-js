@@ -125,7 +125,7 @@ The node version of the module can be executed outside a web browser with a back
 The following command builds the node version of the module:
 
 ```
-TARGET=node make prebuilt
+TARGET=node make all
 ```
 
 The web version of the module can be used in a web environment (see [cfd.xyz](http://cfd.xyz)).
@@ -133,7 +133,7 @@ The web version of the module can be used in a web environment (see [cfd.xyz](ht
 The following command builds the web version of the module:
 
 ```
-TARGET=web make prebuilt
+TARGET=web make all
 ```
 
 ### Generating the ROM data
@@ -141,7 +141,7 @@ TARGET=web make prebuilt
 The following command executes a parallel (6 cores) process for generating OpenFOAM snapshots. The snaphots are used later within ITHACA-FV for generating the ROM.
 
 ```
-make ROM prebuilt
+make rom
 ```
 
 ### Testing
@@ -151,7 +151,7 @@ Using the ROM data the test `tests/pitzDaily` generates data for a given inlet v
 The following command gives a `/tests/pitzDaily/U_3_nu_0.00001.vtu` file for a velocity of 3.0 m/s and a viscosity of 0.00001.
 
 ```
-make test prebuilt
+make test
 ```
 
 ## Option 2 Building and testing by compiling the third-party libraries
@@ -169,23 +169,31 @@ This option compiles Emscripten versions of Splinter, Eigen and VTK. OpenFOAM an
 For building the node version of the module run:
 
 ```
-TARGET=node make compile
+TARGET=node make compiled-emcc
 ```
 
 For building the web version of the module run:
 
 ```
-TARGET=web make compile
+TARGET=web make compiled-emcc
 ```
 
 ### Generating the ROM data
 
+A local installation of ITHACA-FV ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV)) and OpenFOAM (v2112) is needed. You can use your local versions or install them with:
+
 ```
-make ROM compile
+make compiled-non-emcc
+```
+
+The following command will run OpenFOAM with 6 cores for generating the CFD data and later the ROM:
+
+```
+make compiled-rom
 ```
 
 ### Testing
 
 ```
-make test compile
+make compiled-test
 ```

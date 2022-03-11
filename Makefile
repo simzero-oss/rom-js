@@ -4,35 +4,36 @@ rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work rom-js
 pitzDaily-dir := /work/offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 
 all: install emcc-rom build
-compile: install-compile third-party-compile emcc-third-party-compile emcc-rom-compile build-compile
 test: test-install test-run
 
+compiled-emcc: compiled-install compiled-emcc-third-party compiled-emcc-rom compiled-build
+compiled-test: compiled-test-install compiled-test-run
+
 install:
-	$(rom-js-rom) npm install
+	$(rom-js) npm install
 emcc-rom:
-	$(rom-js-rom) ./emcc_rom.sh
+	$(rom-js) ./emcc_rom.sh
 build:
-	$(rom-js-rom) npm run build
+	$(rom-js) npm run build
 rom:
 	$(rom-js-rom) /bin/bash -c "cd $(pitzDaily-dir) && ./Allrun"
 test-install:
 	$(rom-js) npm install --prefix tests/pitzDaily
 test-run:
 	$(rom-js) cd tests/pitzDaily && node pitzDaily.mjs 3.0 0.00001
-
-install-compile:
+compile-install:
 	npm install
-third-party-compile:
+compiled-non-emcc:
 	./non_emcc_third_party.sh
-emcc-third-party-compile:
+compiled-emcc-third-party:
 	$(web-wasm) ./emcc_third_party.sh
-emcc-rom-compile:
+compiled-emcc-rom:
 	$(web-wasm) ./emcc_rom.sh
-build-compile:
+compiled-build:
 	TARGET="node" npm run build
-rom-compile:
+compiled-rom:
 	cd $(pitzDaily-dir) && ./Allrun
-test-install-compile:
+compiled-test-install:
 	npm install --prefix tests/pitzDaily
-test-run-compile:
+compiled-test-run:
 	cd tests/pitzDaily && node pitzDaily.mjs 3.0 0.00001
