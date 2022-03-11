@@ -1,0 +1,15 @@
+[submodule "third_party/eigen"]
+	path = third_party/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "third_party/ithaca-fv"]
+	path = third_party/ithaca-fv
+	url = https://github.com/carpemonf/ITHACA-FV.git
+[submodule "third_party/openfoam"]
+	path = third_party/openfoam
+	url = https://develop.openfoam.com/Development/openfoam.git
+[submodule "third_party/splinter"]
+	path = third_party/splinter
+	url = https://github.com/bgrimstad/splinter.git
+[submodule "third_party/vtk"]
+	path = third_party/vtk
+	url = https://gitlab.kitware.com/vtk/vtk.git
