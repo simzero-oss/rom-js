@@ -1,7 +1,5 @@
 import rom from 'rom'
 
-import fetch from "node-fetch";
-import Papa from 'papaparse'
 import fs from 'fs'
 
 let U = 3.0;
@@ -53,7 +51,6 @@ const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
   reduced.Nphi_u(Nphi_u);
   reduced.Nphi_p(Nphi_p);
   reduced.Nphi_nut(Nphi_nut);	
-  reduced.N_BC(N_BC);
   reduced.N_BC(N_BC);
   reduced.addMatrices(P, M, K, B);
   reduced.addModes(modes);

@@ -21,6 +21,8 @@ import rom from 'rom.js'
 ```
 
 ```
+import fs from 'fs'
+
 (async () => {
 
   await rom.ready
@@ -67,7 +69,6 @@ import rom from 'rom.js'
   reduced.Nphi_p(Nphi_p);
   reduced.Nphi_nut(Nphi_nut);
   reduced.N_BC(N_BC);
-  reduced.N_BC(N_BC);
   reduced.addMatrices(P, M, K, B);
   reduced.addModes(modes);
   reduced.preprocess();
@@ -89,7 +90,6 @@ import rom from 'rom.js'
 
 })();
 ```
-
 
 `rom.js` is used in [http://cfd.xyz](http:://cfd.xyz). The source code is available at [cfd.xyz GitHub repository](https://github.com/carpemonf/cfd-xyz).
 
@@ -123,7 +123,7 @@ The following command builds the node version of the module:
 TARGET=node make prebuilt
 ```
 
-The web version of the module can be used in a web environment (see [cfd.xyz](http://cfd.xyz).
+The web version of the module can be used in a web environment (see [cfd.xyz](http://cfd.xyz)).
 
 The following command builds the web version of the module:
 
