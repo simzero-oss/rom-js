@@ -51,7 +51,7 @@ echo "#############################"
 echo  BUILDING SPLINTER
 echo "#############################"
 
-ITHACA_THIRD_PARTY=ithaca-fv/src/ITHACA_THIRD_PARTY
+ITHACA_THIRD_PARTY=ithaca-fv/src/ITHACA_THIRD_PARTY/splinter
 SPLINTER_ROOT=$BUILD_ROOT/splinter
 SPLINTER_SOURCE=$SPLINTER_ROOT/src
 SPLINTER_INCLUDE=$SPLINTER_ROOT/include
@@ -81,6 +81,9 @@ if [ ! -d $SPLINTER_BUILD  ];then
 fi
 
 cd $SPLINTER_BUILD
+
+patch --forward -d $SPLINTER_ROOT < $BUILD_ROOT/splinter.patch
+patch --forward -d $BUILD_ROOT/$ITHACA_THIRD_PARTY/include < $BUILD_ROOT/ithaca-fv.patch
 
 emcmake cmake .. \
   -G Ninja -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \

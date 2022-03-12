@@ -1,0 +1,119 @@
+--- splinter/CMakeLists.txt	2022-02-04 23:23:29.154981014 +0100
++++ splinter/CMakeListsNew.txt	2022-02-04 23:28:11.044807016 +0100
+@@ -59,12 +59,15 @@
+ 
+ # Set bitness
+ if(${ARCH} STREQUAL "x86-64")
+-	set(BITNESS "64")
++    set(BITNESS "64")
++    set(BITNESS_FLAG "-m${BITNESS}")
+ elseif(${ARCH} STREQUAL "x86")
+-	set(BITNESS "32")
++    set(BITNESS "32")
++    set(BITNESS_FLAG "-m${BITNESS}")
+ else()
+     set(BITNESS "32")
+     set(ARCH "x86")
++    set(BITNESS_FLAG "-m${BITNESS}")
+     message("Unknown architecture selected, defaulting to x86")
+ endif()
+ 
+@@ -91,7 +94,7 @@
+ 		# -fipa-cp-clone causes a SegFault in Eigen when enabled with MinGW i686 4.9.2 with dwarf exception model
+ 		#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fipa-cp-clone")
+ 	endif()
+-	
++
+ 	# To avoid an external dependency (libgcc_s_seh11.dll or libgcc_s_dw2-1.dll)
+ 	# we statically link the libraries required by MinGW runtimes
+ 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -static")
+@@ -110,11 +113,11 @@
+ elseif(GCC OR CLANG)
+     # Treat warning return-type as error to avoid undefined behaviour
+     # when a non-void function does not return a value.
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m${BITNESS} -std=c++11 -Werror=return-type")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${BITNESS_FLAG} -std=c++11 -Werror=return-type")
+     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wno-long-long")
+ 
+ elseif(INTEL)
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m${BITNESS} -std=c++11")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${BITNESS_FLAG} -std=c++11")
+     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+ endif()
+ 
+@@ -168,6 +171,8 @@
+     include/serializer.h
+     include/utilities.h
+     include/saveable.h
++    include/rbfspline.h
++    include/spline.h
+     src/bspline.cpp
+     src/bsplinebasis.cpp
+     src/bsplinebasis1d.cpp
+@@ -179,6 +184,8 @@
+     src/mykroneckerproduct.cpp
+     src/serializer.cpp
+     src/utilities.cpp
++    src/knots.cpp
++    src/rbfspline.cpp
+ )
+ set(TEST_SRC_LIST
+     ${SRC_LIST}
+@@ -211,6 +218,7 @@
+ set(STATIC_LIBRARY_TEST "${PROJECT_NAME_LOWER}-static-test")
+ set(TEST "${PROJECT_NAME_LOWER}-test")
+ 
++
+ # Add output library: add_library(libname [SHARED | STATIC] sourcelist)
+ add_library(${SHARED_LIBRARY} SHARED ${SRC_LIST})
+ add_library(${STATIC_LIBRARY} STATIC ${SRC_LIST})
+@@ -219,6 +227,40 @@
+ add_executable(${TEST} ${TEST_SRC_LIST})
+ target_link_libraries(${TEST} ${STATIC_LIBRARY})
+ 
++
++# -----------------------------------------------------------------------------
++# WebAssembly build options
++# -----------------------------------------------------------------------------
++
++set_target_properties(
++	${STATIC_LIBRARY} 
++	PROPERTIES LINK_FLAGS "-s EXPORT_NAME=splinter 
++	                       -s ALLOW_MEMORY_GROWTH=1
++			       -s DEMANGLE_SUPPORT=1
++			       -s EMULATE_FUNCTION_POINTER_CASTS=0
++			       -s ERROR_ON_UNDEFINED_SYMBOLS=0
++			       -s MODULARIZE=1
++			       -s USE_PTHREADS=0
++			       -s WASM=1"
++)
++
++
++# -----------------------------------------------------------------------------
++# WebAssembly build options
++# -----------------------------------------------------------------------------
++
++set_target_properties(
++	${STATIC_LIBRARY} 
++	PROPERTIES LINK_FLAGS "-s EXPORT_NAME=splinter 
++	                       -s ALLOW_MEMORY_GROWTH=1
++			       -s DEMANGLE_SUPPORT=1
++			       -s EMULATE_FUNCTION_POINTER_CASTS=0
++			       -s ERROR_ON_UNDEFINED_SYMBOLS=0
++			       -s MODULARIZE=1
++			       -s USE_PTHREADS=0
++			       -s WASM=1"
++)
++
+ # Make the directory structure expected by the MatLab interface
+ # License file
+ install(
+@@ -299,7 +341,7 @@
+     ${PROJECT_BINARY_DIR}/Doxyfile
+     COMMENT "Generating API documentation with Doxygen"
+     VERBATIM)
+-    
++
+ endif()
+ 
+ if(CMAKE_BUILD_TYPE STREQUAL DEBUG)
