@@ -1,8 +1,9 @@
 SHELL := /bin/bash
 
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
-rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work rom-js:v0.1
-rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work rom-js:v0.1
+rom-js-image := ghcr.io/simzero-oss/rom-js:v0.1
+rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)
+rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
 pitzDaily-dir := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
 
