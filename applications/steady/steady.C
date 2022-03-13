@@ -40,7 +40,6 @@ SourceFiles
 class pitzDaily : public SteadyNSTurb
 {
     public:
-        /// Constructor
         explicit pitzDaily(int argc, char* argv[])
             :
             SteadyNSTurb(argc, argv),
@@ -55,7 +54,6 @@ class pitzDaily : public SteadyNSTurb
         volScalarField& nut;
         argList& args;
 
-        // Perform an Offline solve
         void offlineSolve()
         {
              ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
@@ -83,12 +81,6 @@ int main(int argc, char* argv[])
 
     argList::addBoolOption
     (
-        "create-rom",
-        "Generate ROM data from offline snapshots"
-    );
-
-    argList::addBoolOption
-    (
         "online",
         "Solve and reconstruct fields"
     );
@@ -97,61 +89,61 @@ int main(int argc, char* argv[])
 
     pitzDaily example(argc, argv);
 
-    const double UOnline = args.getOrDefault<label>("U", 1);
-    const double nuOnline = args.getOrDefault<label>("nu", 1e-05);
+    const double UOnline = args.getOrDefault<scalar>("U", 1);
+    const double nuOnline = args.getOrDefault<scalar>("nu", 1e-05);
 
-    if (args.found("create-rom"))
-    {
-        int USamples = 40;
-        int nuSamples = 5;
-
-        ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                                example._runTime());
-        int NmodesU = para->ITHACAdict->lookupOrDefault<int>("NmodesU", 15);
-        int NmodesP = para->ITHACAdict->lookupOrDefault<int>("NmodesP", 15);
-        int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 15);
-        int NmodesNut = para->ITHACAdict->lookupOrDefault<int>("NmodesNut", 15);
-        int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 10);
+    int NmodesU = para->ITHACAdict->lookupOrDefault<int>("NmodesU", 15);
+    int NmodesP = para->ITHACAdict->lookupOrDefault<int>("NmodesP", 15);
+    int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 15);
+    int NmodesNut = para->ITHACAdict->lookupOrDefault<int>("NmodesNut", 15);
+    int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 10);
 
-        Eigen::VectorXd URange = Eigen::VectorXd::LinSpaced(USamples, 0.5, 20.0);
-        Eigen::VectorXd nuRange = Eigen::VectorXd::LinSpaced(5, 0.0001, 0.000001);
-        Eigen::MatrixXd par(USamples*nuSamples, 2);
+    std::ifstream parametersCount;
+    parametersCount.open("ITHACAoutput/Parameters/par.txt");
+    int nParameters = std::count(std::istreambuf_iterator<char>(parametersCount), 
+    std::istreambuf_iterator<char>(), '\n');
+    Eigen::MatrixXd par(nParameters, 2);
+    std::ifstream parameters;
+    parameters.open("ITHACAoutput/Parameters/par.txt");
 
-        int k = 0;
-        for (int i = 0; i < USamples; i++)
-        {
-            for (int j = 0; j < nuSamples; j++)
-            {
-                par(k, 0) = URange[i];
-                par(k, 1) = nuRange(j);
-                k++;
-            }
-        }
-
-        example.mu = par;
-        example.inletIndex.resize(1, 2);
-        example.inletIndex(0, 0) = 0;
-        example.inletIndex(0, 1) = 0;
-        example.maxIter = para->ITHACAdict->lookupOrDefault<int>("maxIter", 2000);
-
-        example.offlineSolve();
-
-        example.solvesupremizer();
-        example.liftSolve();
-        example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
-
-        ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
-                            example.podex, 0, 0, NmodesProject);
-        ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-                            example.podex, 0, 0, NmodesProject);
-        ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
-                            example.podex, example.supex, 1, NmodesProject);
-        ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut",
-                            example.podex, 0, 0, NmodesProject);
-        example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP, NmodesNut);
+    int k = 0;
+    std::string line;
+    while (std::getline(parameters, line))
+    {
+       std::istringstream stream(line);
+       double U, nu;
+       if (!(stream >> U >> nu))
+           break;
+        par(k, 0) = U;
+        par(k, 1) = nu;
+        k++;
     }
 
-    if (args.found("create-rom"))
+    example.mu = par;
+    example.inletIndex.resize(1, 2);
+    example.inletIndex(0, 0) = 0;
+    example.inletIndex(0, 1) = 0;
+
+    example.offlineSolve();
+
+    example.solvesupremizer();
+    example.liftSolve();
+    example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0, NmodesProject);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0, NmodesProject);
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
+                        example.podex, example.supex, 1, NmodesProject);
+    ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut",
+                        example.podex, 0, 0, NmodesProject);
+
+    example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP, NmodesNut);
+
+    if (args.found("online"))
     {
         ReducedSteadyNSTurb reduced(example);
         Eigen::MatrixXd vel_now(1, 1);

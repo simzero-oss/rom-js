@@ -4,17 +4,21 @@ cd "${0%/*}" || exit                                # Run from this directory
 . ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
 #------------------------------------------------------------------------------
 
+OFFLINE_CORES=6
+
 JS_TEST=../../../../../tests/pitzDaily
 JS_TEST_DATA=${JS_TEST}/data
 JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
 
 cleanCase
 rm -r ITHACAoutput
+rm -r runs
 blockMesh > log.blockMesh 2>&1
-./run_offline.sh
-foamJob -screen steady -create-rom
-foamJob -screen steady -online -U 3.0 0.00001
+./run_offline.sh $OFFLINE_CORES
+#foamJob -screen steady
+foamJob -screen steady -online -U 10.0 -nu 0.000001
 touch ITHACAoutput/Offline/foam.foam
+touch ITHACAoutput/Reconstruction/foam.foam
 foamToVTK -ascii -time 0 -fields 'none' -no-point-data
 
 if [ ! -d $JS_TEST_DATA ];then
