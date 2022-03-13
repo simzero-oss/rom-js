@@ -207,3 +207,7 @@ make compiled-rom
 ```
 make compiled-test
 ```
+
+## License
+
+[GNU Lesser General Public License v3.0](https://github.com/carpemonf/rom-js/blob/main/LICENSE)
