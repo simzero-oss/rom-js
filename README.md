@@ -174,7 +174,7 @@ git submodule update --init --recursive
 
 A local installation of ITHACA-FV ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV)) and OpenFOAM (v2106) is needed. You can use your local versions and skip this step.
 
-Check system requirements for OpenFOAM and ITHACA-FV and run:
+Check system [requirements](https://www.openfoam.com/documentation/system-requirements) for OpenFOAM and ITHACA-FV and run:
 
 
 ```
