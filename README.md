@@ -1,6 +1,6 @@
 # rom.js
 
-rom.js is a JS module for solving the online stage of reduced-order model (ROM) and visualizing the outputs on the web. The current version uses [OpenFOAM](https://www.openfoam.com) and [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) for generating the CFD snapshots and the ROM.
+rom.js is a JavaScript port for solving the online stage of reduced-order model (ROM) and visualizing the outputs on the web. The current version uses [OpenFOAM](https://www.openfoam.com) and [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) for generating the CFD snapshots and the ROM.
 
 ## Usage
 
@@ -103,7 +103,7 @@ const loadData = (path) => {
 
 This is the preferred and easiest method for working with this repository.
 
-The [rom-js](https://hub.docker.com/repository/docker/carpemonf/rom-js) Docker image contains all the configuration and required third-party libraries for: 1) building the JavaScript module, 2) running OpenFOAM and 3) generating the ROM data using ITHACA-FV. The following versions are included in the image:
+The [rom-js](https://github.com/orgs/simzero-oss/packages/container/package/rom-js) Docker image contains all the configuration and required third-party libraries for: 1) building the JavaScript module, 2) running OpenFOAM and 3) generating the ROM data using ITHACA-FV. The following versions are included in the image:
 
 * [Emscripten](https://github.com/emscripten-core/emscripten) 3.1.1
 * [npm](https://github.com/npm/cli) 8.5.3
@@ -111,7 +111,7 @@ The [rom-js](https://hub.docker.com/repository/docker/carpemonf/rom-js) Docker i
 * [Splinter](https://github.com/bgrimstad/splinter) v3.0 (compiled with emmc)
 * [Eigen](https://gitlab.com/libeigen/eigen) v3.4.0 (compiled with emmc)
 * [VTK](https://gitlab.kitware.com/vtk/vtk) v9.1 (compiled with emmc)
-* [OpenFOAM](https://develop.openfoam.com/Development/openfoam) v2112
+* [OpenFOAM](https://develop.openfoam.com/Development/openfoam) v2106
 * [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) 3.0 ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV))
 
 ### Requirements
@@ -166,6 +166,12 @@ This option compiles Emscripten versions of Splinter, Eigen and VTK. OpenFOAM an
 
 ### Building
 
+Initialize the third-party submodules with:
+
+```
+git submodule update --init --recursive
+```
+
 For building the node version of the module run:
 
 ```
@@ -180,7 +186,10 @@ TARGET=web make compiled-emcc
 
 ### Generating the ROM data
 
-A local installation of ITHACA-FV ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV)) and OpenFOAM (v2112) is needed. You can use your local versions or install them with:
+A local installation of ITHACA-FV ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV)) and OpenFOAM (v2106) is needed. You can use your local versions and skip this step.
+
+Check system requirements for OpenFOAM and ITHACA-FV and run:
+
 
 ```
 make compiled-non-emcc
