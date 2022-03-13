@@ -172,20 +172,6 @@ Initialize the third-party submodules with:
 git submodule update --init --recursive
 ```
 
-For building the node version of the module run:
-
-```
-TARGET=node make compiled-emcc
-```
-
-For building the web version of the module run:
-
-```
-TARGET=web make compiled-emcc
-```
-
-### Generating the ROM data
-
 A local installation of ITHACA-FV ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV)) and OpenFOAM (v2106) is needed. You can use your local versions and skip this step.
 
 Check system requirements for OpenFOAM and ITHACA-FV and run:
@@ -194,6 +180,21 @@ Check system requirements for OpenFOAM and ITHACA-FV and run:
 ```
 make compiled-non-emcc
 ```
+
+For building the node version of the `rom.js` module run:
+
+```
+TARGET=node make compiled-emcc
+```
+
+For building the web version of the `rom.js` module run:
+
+```
+TARGET=web make compiled-emcc
+```
+
+### Generating the ROM data
+
 
 The following command will run OpenFOAM with 6 cores for generating the CFD data and later the ROM:
 
