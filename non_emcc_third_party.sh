@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROC=6
-ROOT=/build
+ROOT=.
 BUILD_ROOT=$ROOT/third_party
 
 echo "#############################"
@@ -19,20 +19,16 @@ OPENFOAM_BUILD=$OPENFOAM_ROOT/openfoam-build
 
 source $OPENFOAM_ROOT/etc/bashrc
 
-cd $OPENFOAM_ROOT
-
-pwd
-
-./Allwmake -j${PROC}
+(cd $OPENFOAM_ROOT && ./Allwmake -j${PROC})
 
 echo "#############################"
 echo  BUILDING ITHACA-FV
 echo "#############################"
 
-ITHACAFV_ROOT=$BUILD_ROOT/ITHACA-FV
+ITHACAFV_ROOT=$BUILD_ROOT/ithaca-fv
 APPLICATIONS=$ROOT/applications
 
-cd $ITHACAFV_ROOT
+source $ITHACAFV_ROOT/etc/bashrc
 
-./Allwmake -j${PROC}
+(cd $ITHACAFV_ROOT && ./Allwmake -j${PROC})
 cd $APPLICATIONS/steady && wmake
