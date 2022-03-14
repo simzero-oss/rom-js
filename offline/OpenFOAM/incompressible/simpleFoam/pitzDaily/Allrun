@@ -4,7 +4,7 @@ cd "${0%/*}" || exit                                # Run from this directory
 . ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
 #------------------------------------------------------------------------------
 
-OFFLINE_CORES=8
+OFFLINE_CORES=$1
 
 JS_TEST=../../../../../tests/pitzDaily
 JS_TEST_DATA=${JS_TEST}/data
@@ -15,7 +15,7 @@ rm -r ITHACAoutput
 rm -r runs
 blockMesh > log.blockMesh 2>&1
 ./run_offline.sh $OFFLINE_CORES
-#foamJob -screen steady
+# TODO: remove redundancies
 foamJob -screen steady -online -U 1.5 -nu 0.00005
 (cd ITHACAoutput/Reconstruction && \
  rm 0 && \
@@ -30,6 +30,10 @@ foamJob -screen steady -online -U 10.0 -nu 0.00001
 foamJob -screen steady -online -U 15.0 -nu 0.0001
 mv 1 U_15_nu_0-0001
 foamToVTK -case ITHACAoutput/Reconstruction
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_1/internal.vtu U_1.5_nu_0.00005.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_2/internal.vtu U_10.0_nu_0.00001.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_3/internal.vtu U_15.0_nu_0.0001.vtu
+rm -r ITHACAoutput/Reconstruction/VTK
 touch ITHACAoutput/Offline/foam.foam
 touch ITHACAoutput/Reconstruction/foam.foam
 foamToVTK -ascii -time 0 -fields 'none' -no-point-data

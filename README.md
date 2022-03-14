@@ -137,14 +137,14 @@ TARGET=web make all
 
 ### Generating the ROM data
 
-The CFD snapshots are generated directly with OpenFOAM. For the `pitzDaily` tutorial 800 simulations are run for different parameters of viscosity and inlet velocity with:
+The CFD snapshots are generated directly with OpenFOAM. For the `pitzDaily` tutorial, 800 single core simulations are run in parallel for different parameters of viscosity and inlet velocity. For a run with 8 cores:
 
 
 ```console
-make rom
+CORES=8 make rom
 ```
 
-The snasphots can be found at `ITHACAoutput/Offline` for every case. The `ITHACAoutput/Reconstruction` contains folders for the online stage for selected parameters.
+The snasphots can be found at `ITHACAoutput/Offline` for every case, and `ITHACAoutput/Parameters` the coressponding parameters for every folder in `ITHACAoutput/Offline`. The `ITHACAoutput/Reconstruction` contains folders for the online stage for the selected parameters.
 
 The required data from `rom.js` is automatically linked to the tutorials in the `tests` folder for completing the next step.
 
@@ -203,7 +203,7 @@ TARGET=web make compiled-emcc
 The following command will run OpenFOAM with 8 cores for generating the CFD data and later the ROM:
 
 ```console
-make compiled-rom
+CORES=8 make compiled-rom
 ```
 
 ### Testing
