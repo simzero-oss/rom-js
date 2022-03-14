@@ -65,7 +65,7 @@ SourceFiles
 #include <vtkCellData.h>
 
 // TODO:To deprecate
-#define MAXBUFSIZE  ((int) 500000)
+#define MAXBUFSIZE  ((int) 1e6)
 
 using namespace std;
 using namespace Eigen;
@@ -240,7 +240,7 @@ public:
     string line;
     stringstream data_stream(buffer);
     int col = 0, row = 0;
-    double buff[MAXBUFSIZE];
+    double *buff = new double[MAXBUFSIZE];
     while(getline(data_stream, line)) {
         int temp_col = 0;
 	stringstream stream(line);
