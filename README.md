@@ -1,3 +1,5 @@
+# rom.js
+
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://github.com/orgs/simzero-oss/packages/container/package/rom-js)
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)]()
 [![Join Slack](https://img.shields.io/badge/Join%20us%20on-Slack-e01563.svg)](https://join.slack.com/t/cfd-xyz/shared_invite/zt-12uquswo6-FFVy95vRjfMF~~t8j~UBHA)
@@ -121,17 +123,13 @@ The [rom-js](https://github.com/orgs/simzero-oss/packages/container/package/rom-
 
 ### Building
 
-The node version of the module can be executed outside a web browser with a back-end JavaScript runtime environment (Node.js).
-
-The following command builds the node version of the module:
+The node version of the module can be executed outside a web browser with a back-end JavaScript runtime environment (Node.js). The following command builds the node version of the module:
 
 ```console
 TARGET=node make all
 ```
 
-The web version of the module can be used in a web environment (see [cfd.xyz](http://cfd.xyz)).
-
-The following command builds the web version of the module:
+This repository includes examples for solving the ROM online stage with the node version. A web version of the module can be also built and used in a web environment (check [cfd.xyz](http://cfd.xyz)). The following command builds the web version of the module:
 
 ```console
 TARGET=web make all
@@ -139,17 +137,22 @@ TARGET=web make all
 
 ### Generating the ROM data
 
-The following command executes a parallel (8 cores) process for generating OpenFOAM snapshots. The snaphots are used later within ITHACA-FV for generating the ROM.
+The CFD snapshots are generated directly with OpenFOAM. For the `pitzDaily` tutorial 800 simulations are run for different parameters of viscosity and inlet velocity with:
+
 
 ```console
 make rom
 ```
 
+The snasphots can be found at `ITHACAoutput/Offline` for every case. The `ITHACAoutput/Reconstruction` contains folders for the online stage for selected parameters.
+
+The required data from `rom.js` is automatically linked to the tutorials in the `tests` folder for completing the next step.
+
 ### Testing
 
-Using the ROM data the test `tests/pitzDaily` generates data for a given inlet velocity and viscosity.
+Using the ROM data the `tests/pitzDaily` generates outputs for a given inlet velocity and viscosity set.
 
-The following command gives a `/tests/pitzDaily/U_3_nu_0.00001.vtu` file for a velocity of 3.0 m/s and a viscosity of 0.00001.
+The following command returns  `*.vtu` files for the chosen velocity and viscosity sets:
 
 ```console
 make test
