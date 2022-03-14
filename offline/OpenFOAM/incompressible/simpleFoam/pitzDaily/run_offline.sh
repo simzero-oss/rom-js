@@ -27,7 +27,7 @@ U_step=0.5
 
 nu_min=0.000005
 nu_max=0.0001
-nu_step=2.375e-05
+nu_step=5.0e-06
 
 offline_path="ITHACAoutput/Offline"
 param_path="ITHACAoutput/Parameters"
