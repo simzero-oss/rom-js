@@ -1,4 +1,4 @@
-// Copyright (C) 2022 by Carlos Peña-Monferrer
+// Copyright (c) 2022 Carlos Peña-Monferrer. All rights reserved.
 // Adapted from ITHACA-FV ReducedSteadyNS and ReducedSteadyNSTurb classes
 // on https://github.com/mathLab/ITHACA-FV with the following copyright
 // and license:

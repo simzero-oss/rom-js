@@ -1,3 +1,7 @@
+# Copyright (c) 2022 Carlos Peña-Monferrer. All rights reserved.
+# This work is licensed under the terms of the GNU LGPL v3.0 license.
+# For a copy, see <https://opensource.org/licenses/LGPL-3.0>.
+
 SHELL := /bin/bash
 
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
@@ -20,7 +24,7 @@ emcc-rom:
 run-build:
 	$(rom-js) npm run build
 rom:
-	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-dir) && ./Allrun"
+	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-dir) && ./Allrun ${CORES}"
 test-install:
 	$(rom-js) npm install --prefix tests/pitzDaily
 test-run:
@@ -36,7 +40,7 @@ compiled-emcc-rom:
 compiled-build:
 	TARGET="node" npm run build
 compiled-rom:
-	source $(openfoam-dir) && cd $(pitzDaily-dir) && ./Allrun
+	source $(openfoam-dir) && cd $(pitzDaily-dir) && ./Allrun ${CORES}
 compiled-test-install:
 	npm install --prefix tests/pitzDaily
 compiled-test-run:
