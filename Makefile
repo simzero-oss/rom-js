@@ -10,6 +10,7 @@ rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:
 rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
 pitzDaily-dir := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
+data-url := https://github.com/carpemonf/rom-js-data/raw/main/surrogates_v0.1.tar.gz
 
 all: install emcc-rom run-build
 test: test-install test-run
@@ -25,6 +26,9 @@ run-build:
 	$(rom-js) npm run build
 rom:
 	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-dir) && ./Allrun ${CORES}"
+data:
+	$(rom-js) curl -LJ0 $(data-url) -o surrogates.tar.gz
+	tar -zxvf surrogates.tar.gz -C ./
 test-install:
 	$(rom-js) npm install --prefix tests/pitzDaily
 test-run:

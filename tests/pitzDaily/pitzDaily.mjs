@@ -14,6 +14,7 @@ if(process.argv[2])
   nu = process.argv[3];
 }
 
+const dataPath = "../../surrogates/OpenFOAM/incompressible/simpleFoam/pitzDaily/";
 const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
 
 const loadData = (path) => {
@@ -28,14 +29,14 @@ const loadData = (path) => {
 
   const N_BC = 1;
 
-  const P = loadData("data/matrices/P_mat.txt");
-  const M = loadData("data/matrices/M_mat.txt");
-  const K = loadData("data/matrices/K_mat.txt");
-  const B = loadData("data/matrices/B_mat.txt");
-  const modes = loadData('data/EigenModes_U_mat.txt');
-  const coeffL2 = loadData('data/matrices/coeffL2_mat.txt');
-  const mu = loadData('data/par.txt');
-  const grid_data = fs.readFileSync('data/pitzDaily.vtu')
+  const P = loadData(dataPath + "matrices/P_mat.txt");
+  const M = loadData(dataPath + "matrices/M_mat.txt");
+  const K = loadData(dataPath + "matrices/K_mat.txt");
+  const B = loadData(dataPath + "matrices/B_mat.txt");
+  const modes = loadData(dataPath + "EigenModes_U_mat.txt");
+  const coeffL2 = loadData(dataPath + "matrices/coeffL2_mat.txt");
+  const mu = loadData(dataPath + "par.txt");
+  const grid_data = fs.readFileSync(dataPath + "pitzDaily.vtu")
 
   const Nphi_u = B.split("\n").length;
   const Nphi_p = K.split("\n")[0].split(" ").length;
@@ -44,9 +45,9 @@ const loadData = (path) => {
   const reduced = new rom.reducedSteady(Nphi_u + Nphi_p, Nphi_u + Nphi_p);
 
   for (var i = 0; i < Nphi_u; i ++ ){	
-    const C = loadData("data/matrices/C" + i + "_mat.txt");
-    const Ct1 = loadData("data/matrices/ct1_" + i + "_mat.txt");
-    const Ct2 = loadData("data/matrices/ct2_" + i + "_mat.txt");
+    const C = loadData(dataPath + "matrices/C" + i + "_mat.txt");
+    const Ct1 = loadData(dataPath + "matrices/ct1_" + i + "_mat.txt");
+    const Ct2 = loadData(dataPath + "matrices/ct2_" + i + "_mat.txt");
 
     reduced.addCMatrix(C, i);
     reduced.addCt1Matrix(Ct1, i);

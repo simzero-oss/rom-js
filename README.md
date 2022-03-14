@@ -8,7 +8,7 @@
 `rom.js` is a JavaScript port for solving the online stage of reduced-order model (ROM) and visualizing the outputs on the web. The current version uses [OpenFOAM](https://www.openfoam.com) and [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) for generating the CFD snapshots and the ROM.
 
 
-`rom.js` is used in [http://cfd.xyz](http:://cfd.xyz), check the website and the code at the [cfd.xyz GitHub](https://github.com/carpemonf/cfd-xyz).
+`rom.js` is used in [http://cfd.xyz](http://cfd.xyz), check the website and the code at [cfd.xyz GitHub](https://github.com/carpemonf/cfd-xyz).
 
 
 This is a beta version, please handle it with care. Further features, optimizations and fixes are expected.
@@ -111,9 +111,9 @@ The [rom-js](https://github.com/orgs/simzero-oss/packages/container/package/rom-
 * [Emscripten](https://github.com/emscripten-core/emscripten) 3.1.1
 * [npm](https://github.com/npm/cli) 8.5.3
 * [node](https://github.com/nodejs/node) v14.18.2
-* [Splinter](https://github.com/bgrimstad/splinter) v3.0 (compiled with emmc)
-* [Eigen](https://gitlab.com/libeigen/eigen) v3.4.0 (compiled with emmc)
-* [VTK](https://gitlab.kitware.com/vtk/vtk) v9.1 (compiled with emmc)
+* [Splinter](https://github.com/bgrimstad/splinter) v3.0 (compiled with emcc)
+* [Eigen](https://gitlab.com/libeigen/eigen) v3.4.0 (compiled with emcc)
+* [VTK](https://gitlab.kitware.com/vtk/vtk) v9.1 (compiled with emcc)
 * [OpenFOAM](https://develop.openfoam.com/Development/openfoam) v2106
 * [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) 3.0 ([@carpemonf fork](https://github.com/carpemonf/ITHACA-FV))
 
@@ -137,12 +137,19 @@ TARGET=web make all
 
 ### Generating the ROM data
 
-The CFD snapshots are generated directly with OpenFOAM. For the `pitzDaily` tutorial, 800 single core simulations are run in parallel for different parameters of viscosity and inlet velocity. For a run with 8 cores:
+The CFD snapshots are generated directly with OpenFOAM and later used in ITHACA-FV for generating the ROM. The `pitzDaily` tutorial executes 800 simulations for different parameters of viscosity and inlet velocity. You can skip this step by downloading and extracting the `surrogates` folder with:
+
+```console
+make data
+```
+
+You can also create the content of the `surrogates` folder. Single core simulations are run in parallel for the given number of processors set with the `CORES` variable:
 
 
 ```console
 CORES=8 make rom
 ```
+
 
 The snasphots can be found at `ITHACAoutput/Offline` for every case, and `ITHACAoutput/Parameters` the coressponding parameters for every folder in `ITHACAoutput/Offline`. The `ITHACAoutput/Reconstruction` contains folders for the online stage for the selected parameters.
 
