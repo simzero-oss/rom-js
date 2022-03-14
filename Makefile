@@ -7,7 +7,7 @@ rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-
 pitzDaily-dir := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
 
-all: install emcc-rom build
+all: install emcc-rom run-build
 test: test-install test-run
 
 compiled-emcc: compiled-install compiled-emcc-third-party compiled-emcc-rom compiled-build
@@ -17,14 +17,14 @@ install:
 	$(rom-js) npm install
 emcc-rom:
 	$(rom-js) ./emcc_rom.sh
-build:
+run-build:
 	$(rom-js) npm run build
 rom:
 	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-dir) && ./Allrun"
 test-install:
 	$(rom-js) npm install --prefix tests/pitzDaily
 test-run:
-	$(rom-js) cd tests/pitzDaily && node pitzDaily.mjs 3.0 0.00001
+	$(rom-js) /bin/bash -c "cd tests/pitzDaily && node pitzDaily.mjs 10.0 0.00001 && node pitzDaily.mjs 1.5 0.00005 && node pitzDaily.mjs 15.0 0.0001"
 compiled-install:
 	npm install
 compiled-non-emcc:
@@ -40,4 +40,4 @@ compiled-rom:
 compiled-test-install:
 	npm install --prefix tests/pitzDaily
 compiled-test-run:
-	cd tests/pitzDaily && node pitzDaily.mjs 3.0 0.00001
+	cd tests/pitzDaily && node pitzDaily.mjs 10.0 0.00001 && node pitzDaily.mjs 5.0 0.00005 && node pitzDaily.mjs 15.0 0.0001

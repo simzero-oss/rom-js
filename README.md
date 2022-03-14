@@ -139,7 +139,7 @@ TARGET=web make all
 
 ### Generating the ROM data
 
-The following command executes a parallel (6 cores) process for generating OpenFOAM snapshots. The snaphots are used later within ITHACA-FV for generating the ROM.
+The following command executes a parallel (8 cores) process for generating OpenFOAM snapshots. The snaphots are used later within ITHACA-FV for generating the ROM.
 
 ```console
 make rom
@@ -197,7 +197,7 @@ TARGET=web make compiled-emcc
 ### Generating the ROM data
 
 
-The following command will run OpenFOAM with 6 cores for generating the CFD data and later the ROM:
+The following command will run OpenFOAM with 8 cores for generating the CFD data and later the ROM:
 
 ```console
 make compiled-rom

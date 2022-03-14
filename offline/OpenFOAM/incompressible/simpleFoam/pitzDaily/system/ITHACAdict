@@ -18,11 +18,11 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-NmodesU 5;
+NmodesU 10;
 NmodesP 5;
 NmodesSUP 5;
 NmodesNut 5;
-NmodesProject 5;
+NmodesProject 10;
 
 // eddy viscosity coefficients computation method
 viscCoeff RBF;
