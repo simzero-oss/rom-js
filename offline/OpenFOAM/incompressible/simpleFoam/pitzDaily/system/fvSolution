@@ -21,52 +21,23 @@ solvers
     {
         solver          GAMG;
         tolerance       1e-06;
-        //tolerance       1e-08;
         relTol          0.1;
         smoother        GaussSeidel;
-        /*solver           GAMG;
-        tolerance        1e-10;
-        relTol           0.01;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;*/
-
     }
 
     "(U|k|epsilon|omega|f|v2)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        //tolerance       1e-08;
         tolerance       1e-05;
         relTol          0.1;
     }
 
-    Usup
-    {
-        type            coupled;  // optional, defaults to segregated
-        solver          PBiCCCG;
-        preconditioner  DILU;
-        tolerance       (1e-06 1e-06 1e-06);
-        relTol          (0 0 0);
-    }
-
-    Phi
-    {
-        $p;
-    }
+    #include "ITHACA-FVSolvers"
 
 }
 
-potentialFlow
-{
-    nNonOrthogonalCorrectors 10;
-}
-
+#include "ITHACA-FVControls"
 
 SIMPLE
 {
@@ -75,9 +46,6 @@ SIMPLE
 
     residualControl
     {
-        /*p               1e-16;
-        U               1e-16;
-        "(k|epsilon|omega|f|v2)" 1e-16;*/
         p              1e-2;
         U               1e-3;
         "(k|epsilon|omega|f|v2)" 1e-3;
