@@ -1,6 +1,6 @@
 {
   "name": "rom.js",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.-",
   "description": "A JS module for the online stage of ROM",
   "main": "dist/index.js",
   "files": [
