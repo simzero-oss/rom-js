@@ -4,13 +4,14 @@
 
 SHELL := /bin/bash
 
+version=v1.0.0-beta.0
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
 rom-js-image := ghcr.io/simzero-oss/rom-js:v0.1
 rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)
 rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
-pitzDaily-dir := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
+pitzDaily-offline := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
-data-url := https://github.com/carpemonf/rom-js-data/raw/main/surrogates_v0.1.tar.gz
+data-url := https://github.com/carpemonf/rom-js-data/raw/main/$(version).tar.gz
 
 all: install emcc-rom run-build
 test: test-install test-run
@@ -25,7 +26,7 @@ emcc-rom:
 run-build:
 	$(rom-js) npm run build
 rom:
-	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-dir) && ./Allrun ${CORES}"
+	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-offline) && ./Allrun ${CORES}"
 data:
 	$(rom-js) curl -LJ0 $(data-url) -o surrogates.tar.gz
 	tar -zxvf surrogates.tar.gz -C ./
@@ -44,8 +45,10 @@ compiled-emcc-rom:
 compiled-build:
 	TARGET="node" npm run build
 compiled-rom:
-	source $(openfoam-dir) && cd $(pitzDaily-dir) && ./Allrun ${CORES}
+	source $(openfoam-dir) && cd $(pitzDaily-offline) && ./Allrun ${CORES}
 compiled-test-install:
 	npm install --prefix tests/pitzDaily
 compiled-test-run:
 	cd tests/pitzDaily && node pitzDaily.mjs 10.0 0.00001 && node pitzDaily.mjs 5.0 0.00005 && node pitzDaily.mjs 15.0 0.0001
+pack:
+	tar -zcvf surrogates_$(version).tar.gz surrogates
