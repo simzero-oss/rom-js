@@ -14,7 +14,7 @@ if(process.argv[2])
   nu = process.argv[3];
 }
 
-const dataPath = "../../surrogates/OpenFOAM/incompressible/simpleFoam/pitzDaily/";
+const dataPath = "../../surrogates/OF/incompressible/simpleFoam/pitzDaily/";
 const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
 
 const loadData = (path) => {

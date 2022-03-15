@@ -7,7 +7,7 @@ cd "${0%/*}" || exit                                # Run from this directory
 OFFLINE_CORES=$1
 
 JS_TEST=../../../../../tests/pitzDaily
-JS_TEST_DATA=../../../../../surrogates/OpenFOAM/incompressible/simpleFoam/pitzDaily
+JS_TEST_DATA=../../../../../surrogates/OF/incompressible/simpleFoam/pitzDaily
 JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
 
 cleanCase
