@@ -1,5 +1,6 @@
 # rom.js
 
+[![npm version](https://badge.fury.io/js/@simzero%2From.svg)](https://badge.fury.io/js/@simzero%2From)
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://github.com/orgs/simzero-oss/packages/container/package/rom-js)
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)]()
 [![Join Slack](https://img.shields.io/badge/Join%20us%20on-Slack-e01563.svg)](https://join.slack.com/t/cfd-xyz/shared_invite/zt-12uquswo6-FFVy95vRjfMF~~t8j~UBHA)
