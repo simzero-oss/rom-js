@@ -4,14 +4,14 @@
 
 SHELL := /bin/bash
 
-version=v1.0.0-rc.1
+version=v1.0.0-rc.2
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
 rom-js-image := ghcr.io/simzero-oss/rom-js:$(version)
 rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)
 rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
 pitzDaily-offline := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
-data-url := https://github.com/carpemonf/rom-js-data/raw/main/$(version).tar.gz
+data-url := https://github.com/simzero-oss/rom-js-data/raw/main/$(version).tar.gz
 
 all: install emcc-rom run-build
 test: test-install test-run

@@ -4,12 +4,12 @@
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://github.com/orgs/simzero-oss/packages/container/package/rom-js)
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)]()
 [![Join Slack](https://img.shields.io/badge/Join%20us%20on-Slack-e01563.svg)](https://join.slack.com/t/cfd-xyz/shared_invite/zt-12uquswo6-FFVy95vRjfMF~~t8j~UBHA)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://github.com/carpemonf/rom-js/blob/main/LICENSE)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://github.com/simzero-oss/rom-js/blob/main/LICENSE)
 
 `rom.js` is a JavaScript port for solving the online stage of reduced-order model (ROM) and visualizing the outputs on the web. The current version uses [OpenFOAM](https://www.openfoam.com) and [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) for generating the CFD snapshots and the ROM.
 
 
-`rom.js` is used in [http://cfd.xyz](http://cfd.xyz), check the website and the code at [cfd.xyz GitHub](https://github.com/carpemonf/cfd-xyz).
+`rom.js` is used in [http://cfd.xyz](http://cfd.xyz), check the website and the code at [cfd.xyz GitHub](https://github.com/simzero-oss/cfd-xyz).
 
 
 This is a beta version, please handle it with care. Further features, optimizations and fixes are expected.
@@ -222,4 +222,4 @@ make compiled-test
 
 ## License
 
-[GNU Lesser General Public License v3.0](https://github.com/carpemonf/rom-js/blob/main/LICENSE)
+[GNU Lesser General Public License v3.0](https://github.com/simzero-oss/rom-js/blob/main/LICENSE)
