@@ -2,7 +2,7 @@
 // This work is licensed under the terms of the GNU LGPL v3.0 license.
 // For a copy, see <https://opensource.org/licenses/LGPL-3.0>.
 
-import rom from 'rom'
+import rom from '@simzero/rom'
 import fs from 'fs'
 
 let U = 3.0;

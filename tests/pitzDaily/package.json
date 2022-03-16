@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "GNU LGPL V3.0",
   "dependencies": {
-    "rom": "file:../../",
+    "@simzero/rom": "file:../../",
     "esm": "^3.2.25",
     "node-fetch": "^3.0.0",
     "papaparse": "^5.3.1",

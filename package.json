@@ -1,6 +1,6 @@
 {
-  "name": "rom.js",
-  "version": "1.0.0-beta.-",
+  "name": "@simzero/rom",
+  "version": "1.0.0-beta.0",
   "description": "A JS module for the online stage of ROM",
   "main": "dist/index.js",
   "files": [
@@ -8,10 +8,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/carpemonf/rom-js.git"
+    "url": "git+https://github.com/simzero-oss/rom-js.git"
   },
-  "author": "Carlos Pena-Monferrer <carpemonf@gmail.com>",
-  "license": "GNU LGPL V3.0",
+  "author": "Carlos Pena-Monferrer <carpemonf@simzero.es>",
+  "license": "LGPL-3.0-only",
   "keywords": [
     "CFD",
     "ROM",
