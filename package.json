@@ -1,6 +1,6 @@
 {
   "name": "@simzero/rom",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "description": "A JS module for the online stage of ROM",
   "main": "dist/index.js",
   "files": [
