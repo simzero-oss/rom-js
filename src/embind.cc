@@ -10,6 +10,9 @@ using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(Module)
 {
+    emscripten::register_vector<double>("Vector");
+    emscripten::register_vector<std::vector<double>>("VectorVector");
+
     class_<ReducedSteady>("reducedSteady")
         .constructor<int, int>()
         .constructor<const ReducedSteady &>()

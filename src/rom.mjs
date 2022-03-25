@@ -6,6 +6,8 @@ const Module = rom({
 });
 
 rom.ready = Module.then(module => {
+  rom["Vector"] = module["Vector"]
+  rom["VectorVector"] = module["VectorVector"]
   rom["reducedSteady"] = module["reducedSteady"]
 })
 

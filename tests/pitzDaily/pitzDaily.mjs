@@ -3,6 +3,7 @@
 // For a copy, see <https://opensource.org/licenses/LGPL-3.0>.
 
 import rom from '@simzero/rom'
+import Papa from 'papaparse'
 import fs from 'fs'
 
 let U = 3.0;
@@ -14,12 +15,46 @@ if(process.argv[2])
   nu = process.argv[3];
 }
 
-const dataPath = "../../surrogates/OF/incompressible/simpleFoam/pitzDaily/";
+const rootPath = "../../surrogates/OF/incompressible/simpleFoam/pitzDaily/";
 const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
 
-const loadData = (path) => {
-  const data = fs.readFileSync(path).toString();
-  return data;
+const loadData = async (dataPath) => {
+  const data = await readFile(rootPath + dataPath)
+  const vector = dataToVector(data);
+  return vector;
+}
+
+const readFile = async (filePath) => {
+  const csvFile = fs.readFileSync(filePath)
+  const csvData = csvFile.toString()
+  return new Promise(resolve => {
+    Papa.parse(csvData, {
+      delimiter: " ",
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      header: false,
+      complete: results => {
+        resolve(results.data);
+      }
+    });
+  });
+};
+
+const dataToVector = (data) => {
+  const vecVec = new rom.VectorVector();
+  let rows = 0;
+  let cols = 0;
+  data.forEach(row => {
+    var vec = new rom.Vector();
+    row.forEach(value => {
+      vec.push_back(value)
+      if (rows === 0)
+        cols++;
+    });
+    vecVec.push_back(vec)
+    rows++;
+  })
+  return [vecVec, rows, cols];
 }
 
 (async () => {
@@ -29,31 +64,21 @@ const loadData = (path) => {
 
   const N_BC = 1;
 
-  const P = loadData(dataPath + "matrices/P_mat.txt");
-  const M = loadData(dataPath + "matrices/M_mat.txt");
-  const K = loadData(dataPath + "matrices/K_mat.txt");
-  const B = loadData(dataPath + "matrices/B_mat.txt");
-  const modes = loadData(dataPath + "EigenModes_U_mat.txt");
-  const coeffL2 = loadData(dataPath + "matrices/coeffL2_mat.txt");
-  const mu = loadData(dataPath + "par.txt");
-  const grid_data = fs.readFileSync(dataPath + "pitzDaily.vtu")
+  const P = await loadData("matrices/P_mat.txt");
+  const M = await loadData("matrices/M_mat.txt");
+  const K = await loadData("matrices/K_mat.txt");
+  const B = await loadData("matrices/B_mat.txt");
+  const modes = await loadData("EigenModes_U_mat.txt");
 
-  const Nphi_u = B.split("\n").length;
-  const Nphi_p = K.split("\n")[0].split(" ").length;
-  const Nphi_nut = coeffL2.split("\n").length;
+  const coeffL2 = await loadData("matrices/coeffL2_mat.txt");
+  const mu = await loadData("par.txt");
+  const grid_data = fs.readFileSync(rootPath + "pitzDaily.vtu")
+
+  const Nphi_u = B[1];
+  const Nphi_p = K[2];
+  const Nphi_nut = coeffL2[1];
 
   const reduced = new rom.reducedSteady(Nphi_u + Nphi_p, Nphi_u + Nphi_p);
-
-  for (var i = 0; i < Nphi_u; i ++ ){	
-    const C = loadData(dataPath + "matrices/C" + i + "_mat.txt");
-    const Ct1 = loadData(dataPath + "matrices/ct1_" + i + "_mat.txt");
-    const Ct2 = loadData(dataPath + "matrices/ct2_" + i + "_mat.txt");
-
-    reduced.addCMatrix(C, i);
-    reduced.addCt1Matrix(Ct1, i);
-    reduced.addCt2Matrix(Ct2, i);
-  }
-
 
   reduced.readUnstructuredGrid(grid_data);
 
@@ -61,12 +86,22 @@ const loadData = (path) => {
   reduced.Nphi_p(Nphi_p);
   reduced.Nphi_nut(Nphi_nut);	
   reduced.N_BC(N_BC);
-  reduced.addMatrices(P, M, K, B);
-  reduced.addModes(modes);
-  reduced.preprocess();
-
-  reduced.setRBF(mu, coeffL2);
+  reduced.addMatrices(P[0], M[0], K[0], B[0]);
+  reduced.addModes(modes[0]);
+  reduced.setRBF(mu[0], coeffL2[0]);
   reduced.nu(nu);
+
+  for (var i = 0; i < Nphi_u; i ++ ){
+    const C = await loadData("matrices/C" + i + "_mat.txt");
+    const Ct1 = await loadData("matrices/ct1_" + i + "_mat.txt");
+    const Ct2 = await loadData("matrices/ct2_" + i + "_mat.txt");
+
+    reduced.addCMatrix(C[0], i);
+    reduced.addCt1Matrix(Ct1[0], i);
+    reduced.addCt2Matrix(Ct2[0], i);
+  }
+
+  reduced.preprocess();
 
   var endInitialize = new Date().getTime();
   var timeInitialize = endInitialize - startInitialize;

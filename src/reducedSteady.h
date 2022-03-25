@@ -64,9 +64,6 @@ SourceFiles
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 
-// TODO:To deprecate
-#define MAXBUFSIZE  ((int) 1e6)
-
 using namespace std;
 using namespace Eigen;
 
@@ -171,24 +168,34 @@ public:
     NewtonObject = NewtonSteady(x, y);
   }
 
-  void addCMatrix(string const& M, int index) {
-
-    NewtonObject.CList.push_back(readMatrix(M));
+  void addCMatrix(const vector<vector<double>> &M, int index) {
+    NewtonObject.CList.push_back(vecToEigen(M));
     NewtonObject.CListMap.push_back(index);
   }
 
-  void addCt1Matrix(string const& M, int index) {
-    NewtonObject.Ct1List.push_back(readMatrix(M));
+  void addCt1Matrix(const vector<vector<double>> &M, int index) {
+    NewtonObject.Ct1List.push_back(vecToEigen(M));
     NewtonObject.Ct1ListMap.push_back(index);
   }
 
-  void addCt2Matrix(string const& M, int index) {
-    NewtonObject.Ct2List.push_back(readMatrix(M));
+  void addCt2Matrix(const vector<vector<double>> &M, int index) {
+    NewtonObject.Ct2List.push_back(vecToEigen(M));
     NewtonObject.Ct2ListMap.push_back(index);
   }
 
-  void addModes(string const& M) {
-    NewtonObject.modes = readMatrix(M);
+  void addModes(const vector<vector<double>> &M) {
+    NewtonObject.modes = vecToEigen(M);
+  }
+
+  // TODO: To deprecate
+  MatrixXd vecToEigen(const vector<vector<double>> &v) {
+    const int m = v.size();
+    const int n = v[0].size();
+    MatrixXd mat(m, n);
+    for (int i = 0; i < m; i++)
+      for (int j =0; j < n; j++)
+        mat(i, j) = v[i][j];
+    return mat;
   }
 
   void setBC(int x_) {
@@ -236,49 +243,24 @@ public:
     NewtonObject.g_nut.resize(x_);
   }
 
-  MatrixXd readMatrix(string const& buffer) {
-    string line;
-    stringstream data_stream(buffer);
-    int col = 0, row = 0;
-    double *buff = new double[MAXBUFSIZE];
-    while(getline(data_stream, line)) {
-        int temp_col = 0;
-	stringstream stream(line);
-        while(! stream.eof())
-            stream >> buff[col*row+temp_col++];
-
-        if (temp_col == 0)
-            continue;
-
-        if (col == 0)
-            col = temp_col;
-        row++;
-    }
-
-    MatrixXd matrix(row,col);
-    for (int i = 0; i < row; i++)
-        for (int j = 0; j < col; j++)
-            matrix(i,j) = buff[ col*i+j ];
-
-    return matrix;
-  }
-
   void addMatrices(
-      string const& P,
-      string const& M,
-      string const& K,
-      string const& B
+      const vector<vector<double>> &P,
+      const vector<vector<double>> &M,
+      const vector<vector<double>> &K,
+      const vector<vector<double>> &B
   ) {
-    NewtonObject.P = readMatrix(P);
-    NewtonObject.M = readMatrix(M);
-    NewtonObject.K = readMatrix(K);
-    NewtonObject.B = readMatrix(B);
+    NewtonObject.P = vecToEigen(P);
+    NewtonObject.M = vecToEigen(M);
+    NewtonObject.K = vecToEigen(K);
+    NewtonObject.B = vecToEigen(B);
   }
 
-  void setRBF(string const& M1, string const& M2) 
-  {
-    MatrixXd mu = readMatrix(M1);
-    MatrixXd coeffL2 = readMatrix(M2);
+  void setRBF(
+      const vector<vector<double>> &M1,
+      const vector<vector<double>> &M2
+  ) {
+    MatrixXd mu = vecToEigen(M1);
+    MatrixXd coeffL2 = vecToEigen(M2);
 
     NewtonObject.rbfSplines.resize(coeffL2.rows());
     for (int i = 0; i < coeffL2.rows(); i++)
