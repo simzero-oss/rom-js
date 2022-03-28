@@ -4,7 +4,7 @@
 
 SHELL := /bin/bash
 
-version=v1.0.0-rc.3
+version=v1.0.0-rc.4
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
 rom-js-image := ghcr.io/simzero-oss/rom-js:$(version)
 rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)

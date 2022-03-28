@@ -28,11 +28,49 @@ A minimal usage example can be found in `tests/pitzDaily` using node. This uses 
 
 ```javascript
 import rom from '@simzero/rom'
+import Papa from 'papaparse'
 import fs from 'fs'
 
-const loadData = (path) => {
-  const data = fs.readFileSync(path).toString();
-  return data;
+const rootPath = "../../surrogates/OF/incompressible/simpleFoam/pitzDaily/";
+const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
+
+const loadData = async (dataPath) => {
+  const data = await readFile(rootPath + dataPath)
+  const vector = dataToVector(data);
+  return vector;
+}
+
+const readFile = async (filePath) => {
+  const csvFile = fs.readFileSync(filePath)
+  const csvData = csvFile.toString()
+  return new Promise(resolve => {
+    Papa.parse(csvData, {
+      delimiter: " ",
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      header: false,
+      complete: results => {
+        resolve(results.data);
+      }
+    });
+  });
+};
+
+const dataToVector = (data) => {
+  const vecVec = new rom.VectorVector();
+  let rows = 0;
+  let cols = 0;
+  data.forEach(row => {
+    var vec = new rom.Vector();
+    row.forEach(value => {
+      vec.push_back(value)
+      if (rows === 0)
+        cols++;
+    });
+    vecVec.push_back(vec)
+    rows++;
+  })
+  return [vecVec, rows, cols];
 }
 
 (async () => {
@@ -41,39 +79,29 @@ const loadData = (path) => {
 
   // - Velocity and viscosity values for the online solution
   const U = 3.0; // - m/s
-  const nu = 1e-05; // -m2G/s
+  const nu = 1e-05; // - m2/s
 
   // - Number of patches with non-homogeneous BCs
   const N_BC = 1;
 
   // - Loading ROM data (e.g. generated with the steady app)
-  const P =loadData("data/matrices/P_mat.txt");
-  const M = loadData("data/matrices/M_mat.txt");
-  const K = loadData("data/matrices/K_mat.txt");
-  const B = loadData("data/matrices/B_mat.txt");
-  const modes = loadData('data/EigenModes_U_mat.txt');
-  const coeffL2 = loadData('data/matrices/coeffL2_mat.txt');
-  const mu = loadData('data/par.txt');
-  const grid_data = fs.readFileSync('data/pitzDaily.vtu')
+  const P =loadData('matrices/P_mat.txt');
+  const M = loadData('matrices/M_mat.txt');
+  const K = loadData('matrices/K_mat.txt');
+  const B = loadData('matrices/B_mat.txt');
+  const modes = loadData('EigenModes_U_mat.txt');
+  const coeffL2 = loadData('matrices/coeffL2_mat.txt');
+  const mu = loadData('par.txt');
+  const grid_data = fs.readFileSync('pitzDaily.vtu')
 
   // - Defining variables sizes
-  const Nphi_u = B.split("\n").length;
-  const Nphi_p = K.split("\n")[0].split(" ").length;
-  const Nphi_nut = coeffL2.split("\n").length;
+  const Nphi_u = B[1];
+  const Nphi_p = K[2];
+  const Nphi_nut = coeffL2[1];
 
   // - Defining reducedSteady
   const reduced = new rom.reducedSteady(Nphi_u + Nphi_p, Nphi_u + Nphi_p);
 
-  // - Loading turbulent related matrices
-  for (var i = 0; i < Nphi_u; i ++ ){
-    const C = loadData("data/matrices/C" + i + "_mat.txt");
-    const Ct1 = loadData("data/matrices/ct1_" + i + "_mat.txt");
-    const Ct2 = loadData("data/matrices/ct2_" + i + "_mat.txt");
-
-    reduced.addCMatrix(C, i);
-    reduced.addCt1Matrix(Ct1, i);
-    reduced.addCt2Matrix(Ct2, i);
-  }
 
   // - Setting up grid and ROM data
   reduced.readUnstructuredGrid(grid_data);
@@ -83,8 +111,20 @@ const loadData = (path) => {
   reduced.N_BC(N_BC);
   reduced.addMatrices(P, M, K, B);
   reduced.addModes(modes);
-  reduced.preprocess();
   reduced.setRBF(mu, coeffL2);
+
+  // - Loading turbulent related matrices
+  for (var i = 0; i < Nphi_u; i ++ ){
+    const C = loadData("matrices/C" + i + "_mat.txt");
+    const Ct1 = loadData("matrices/ct1_" + i + "_mat.txt");
+    const Ct2 = loadData("matrices/ct2_" + i + "_mat.txt");
+
+    reduced.addCMatrix(C, i);
+    reduced.addCt1Matrix(Ct1, i);
+    reduced.addCt2Matrix(Ct2, i);
+  }
+
+  reduced.preprocess();
 
   // - Defining viscosity and solving for the given velocity
   reduced.nu(nu*1e-05);
