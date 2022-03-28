@@ -16,6 +16,8 @@ rm -r runs
 blockMesh > log.blockMesh 2>&1
 ./run_offline.sh $OFFLINE_CORES
 # TODO: remove redundancies
+mkdir -p ITHACAoutput/Reconstruction
+cp inputs ITHACAoutput/Reconstruction/
 foamJob -screen steady -online -U 1.5 -nu 0.00005
 (cd ITHACAoutput/Reconstruction && \
  rm 0 && \
@@ -30,9 +32,9 @@ foamJob -screen steady -online -U 10.0 -nu 0.00001
 foamJob -screen steady -online -U 15.0 -nu 0.0001
 mv 1 U_15_nu_0-0001
 foamToVTK -case ITHACAoutput/Reconstruction
-mv ITHACAoutput/Reconstruction/VTK/Reconstruction_1/internal.vtu U_1.5_nu_0.00005.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_1/internal.vtu U_15.0_nu_0.0001.vtu
 mv ITHACAoutput/Reconstruction/VTK/Reconstruction_2/internal.vtu U_10.0_nu_0.00001.vtu
-mv ITHACAoutput/Reconstruction/VTK/Reconstruction_3/internal.vtu U_15.0_nu_0.0001.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_3/internal.vtu U_1.5_nu_0.00005.vtu
 rm -r ITHACAoutput/Reconstruction/VTK
 touch ITHACAoutput/Offline/foam.foam
 touch ITHACAoutput/Reconstruction/foam.foam

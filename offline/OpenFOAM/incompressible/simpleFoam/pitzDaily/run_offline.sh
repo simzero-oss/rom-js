@@ -8,6 +8,7 @@
 run_case () {
   mkdir -p runs/$k/constant && \
   cp -r 0 runs/$k/ && \
+  cp inputs runs/$k/ && \
   cp constant/transportProperties runs/$k/constant/ && \
   cd runs/$k/constant && \
   ln -s ../../../constant/polyMesh polyMesh && \
@@ -15,8 +16,7 @@ run_case () {
   cd .. && \
   ln -s ../../system system && \
   foamDictionary constant/transportProperties -entry nu -set ${nu_params[$k]} && \
-  foamDictionary 0/U -entry boundaryField.inlet.value -set "uniform (${U_params[$k]} 0 0)" && \
-  # mpirun -np 1 foamJob -wait simpleFoam && \
+  foamDictionary inputs -entry U -set ${U_params[$k]} -disableFunctionEntries && \
   foamJob -wait simpleFoam && \
   results_dir=$(foamListTimes -latestTime) && \
   output_dir=$(($k + 1))
@@ -27,7 +27,7 @@ run_case () {
 cores=$1
 
 U_min=0.5
-U_max=20
+U_max=20.0
 U_step=0.5
 
 nu_min=0.000005

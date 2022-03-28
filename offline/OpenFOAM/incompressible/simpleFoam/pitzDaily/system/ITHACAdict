@@ -18,11 +18,11 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-NmodesU 10;
+NmodesU 15;
 NmodesP 5;
 NmodesSUP 5;
 NmodesNut 5;
-NmodesProject 10;
+NmodesProject 15;
 
 // eddy viscosity coefficients computation method
 viscCoeff RBF;
@@ -33,7 +33,7 @@ OutPrecision 20;
 OutType fixed;
 
 // Specific problem of a stationary case
-tolerance 1e-5;
+tolerance 1e-7;
 
 // Export Reduced Matrices
 exportPython 0;

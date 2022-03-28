@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+U               10.0;
+
+inletWidth      0.0254;
+
+mixingLength    #calc "0.1*$inletWidth";
+
+ti              0.05;
+
+uPrime          #calc "$ti * $U";
+
+k               #calc "1.5*pow($uPrime,2)";
+
+epsilon         #calc "pow(0.09,0.75)*pow($k,1.5)/$mixingLength";
+
+
+// ************************************************************************* //

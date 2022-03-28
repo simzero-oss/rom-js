@@ -16,16 +16,18 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "$FOAM_CASE/inputs"
+
 dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 0.375;
+internalField   uniform $k;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 0.375;
+        value           uniform $k;
     }
     outlet
     {
@@ -34,12 +36,12 @@ boundaryField
     upperWall
     {
         type            kqRWallFunction;
-        value           uniform 0.375;
+        value           uniform $k;
     }
     lowerWall
     {
         type            kqRWallFunction;
-        value           uniform 0.375;
+        value           uniform $k;
     }
     frontAndBack
     {

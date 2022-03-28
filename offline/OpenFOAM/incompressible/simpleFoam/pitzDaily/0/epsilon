@@ -16,16 +16,18 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "$FOAM_CASE/inputs"
+
 dimensions      [0 2 -3 0 0 0 0];
 
-internalField   uniform 14.855;
+internalField   uniform $epsilon;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 14.855;
+        value           uniform $epsilon;
     }
     outlet
     {
@@ -37,7 +39,7 @@ boundaryField
         blending        stepwise;
         n               2;
         type            epsilonWallFunction;
-        value           uniform 14.855;
+        value           uniform $epsilon;
     }
     lowerWall
     {
@@ -45,7 +47,7 @@ boundaryField
         blending        stepwise;
         n               2;
         type            epsilonWallFunction;
-        value           uniform 14.855;
+        value           uniform $epsilon;
     }
     frontAndBack
     {
