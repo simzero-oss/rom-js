@@ -265,8 +265,6 @@ make compiled-test
 
 Everyone is welcome to contribute to this project. See [CONTRIBUTING.md](https://github.com/simzero-oss/rom-js/blob/main/CONTRIBUTING.md) for further details.
 
-cfd.xyz is a self-funded initiative, free of charge, with no adds, no popups, no registration and no data collection.
-
 Your donations encourage future developments and help with server costs for providing a better service. If you like the tool you can [:heart: donate](https://www.paypal.com/donate/?hosted_button_id=KKB4LH96E59A4).
 
 ## License
