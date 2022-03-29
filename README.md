@@ -5,6 +5,7 @@
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)]()
 [![Join Slack](https://img.shields.io/badge/Join%20us%20on-Slack-e01563.svg)](https://join.slack.com/t/cfd-xyz/shared_invite/zt-12uquswo6-FFVy95vRjfMF~~t8j~UBHA)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://github.com/simzero-oss/rom-js/blob/main/LICENSE)
+[![PayPal donate button](https://img.shields.io/badge/paypal-donate-red.svg)](https://www.paypal.com/donate/?hosted_button_id=KKB4LH96E59A4)
 
 `rom.js` is a JavaScript port for solving the online stage of reduced-order model (ROM) and visualizing the outputs on the web. The current version uses [OpenFOAM](https://www.openfoam.com) and [ITHACA-FV](https://github.com/mathLab/ITHACA-FV) for generating the CFD snapshots and the ROM.
 
