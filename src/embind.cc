@@ -5,6 +5,7 @@
 #include <emscripten/bind.h>
 #include <iostream>
 #include "reducedSteady.h"
+#include "VTK.h"
 
 using namespace emscripten;
 
@@ -13,6 +14,7 @@ EMSCRIPTEN_BINDINGS(Module)
     emscripten::register_vector<double>("Vector");
     emscripten::register_vector<std::vector<double>>("VectorVector");
 
+    // TODO: remove duplicites between modules
     class_<ReducedSteady>("reducedSteady")
         .constructor<int, int>()
         .constructor<const ReducedSteady &>()
@@ -34,4 +36,14 @@ EMSCRIPTEN_BINDINGS(Module)
         .function("unstructuredGridToPolyData", &ReducedSteady::unstructuredGridToPolyData)
         .function("readUnstructuredGrid", &ReducedSteady::readUnstructuredGrid)
 	;
+
+    class_<VTK>("VTK")
+        .constructor<>()
+        .function("test", &VTK::test)
+        .function("readUnstructuredGrid", &VTK::readUnstructuredGrid)
+        .function("planeX", &VTK::planeX)
+        .function("planeY", &VTK::planeY)
+        .function("planeZ", &VTK::planeZ)
+        .function("unstructuredGridToPolyData", &VTK::unstructuredGridToPolyData)
+        ;
 }

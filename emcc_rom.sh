@@ -29,6 +29,7 @@ emcc -D NO_OSQP \
   -I $VTK_BUILD/IO/XMLParser \
   -I $VTK_BUILD/Common/ExecutionModel \
   -I $VTK_BUILD/Common/Core \
+  -I $VTK_BUILD/Common/Misc \
   -I $VTK_BUILD/Utilities/KWIML \
   -I $VTK_BUILD/Filters/Core \
   -I $VTK_BUILD/Filters/Geometry \
@@ -59,6 +60,7 @@ emcc -D NO_OSQP \
   -lvtkCommonMath-$VTK_LIB_VERSION \
   -lvtkCommonMisc-$VTK_LIB_VERSION \
   -lvtkCommonSystem-$VTK_LIB_VERSION \
+  -lvtkCommonTransforms-$VTK_LIB_VERSION \
   -lvtkexpat-$VTK_LIB_VERSION \
   -lvtkpugixml-$VTK_LIB_VERSION \
   -lvtkIOCore-$VTK_LIB_VERSION \
