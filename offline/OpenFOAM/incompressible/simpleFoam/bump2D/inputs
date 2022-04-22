@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+U               69.44;
+
+nu              2.31e-5;
+
+inletWidth      5.0;
+
+mixingLength    #calc "0.1*$inletWidth";
+
+ti              0.00061;
+
+muRatio         0.009;
+
+muRatioInv      #calc "1.0/$muRatio";
+
+uPrime          #calc "$ti * $U";
+
+k               #calc "1.5*pow($uPrime,2)";
+
+omega           #calc "$k*$muRatioInv/$nu";
+
+// ************************************************************************* //

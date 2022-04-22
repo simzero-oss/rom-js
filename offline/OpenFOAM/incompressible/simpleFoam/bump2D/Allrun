@@ -1,0 +1,58 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+OFFLINE_CORES=$1
+
+JS_TEST=../../../../../tests/bump2D
+JS_TEST_DATA=../../../../../surrogates/OF/incompressible/simpleFoam/bump2D
+JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
+
+restore0Dir
+blockMesh > log.blockMesh 2>&1
+./run_offline.sh $OFFLINE_CORES
+# TODO: remove redundancies
+mkdir -p ITHACAoutput/Reconstruction
+cp inputs ITHACAoutput/Reconstruction/
+foamJob -screen steady -online -Ux 10.0 -nu 7.5e-6
+(cd ITHACAoutput/Reconstruction && \
+ rm 0 && \
+ ln -s ../../0 0 && \
+ rm constant && \
+ ln -s ../../constant constant && \
+ rm system && \
+ ln -s ../../system system && \
+ mv 1 3 )
+foamJob -screen steady -online -Ux 19.0 -nu 1e-5
+(cd ITHACAoutput/Reconstruction && mv 1 2)
+foamJob -screen steady -online -Ux 69.44 -nu 2.31e-5
+foamToVTK -case ITHACAoutput/Reconstruction
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_1/internal.vtu U_69.44_nu_2.31e-5.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_2/internal.vtu U_100.0_nu_1e-5.vtu
+mv ITHACAoutput/Reconstruction/VTK/Reconstruction_3/internal.vtu U_5.0_nu_5e-5.vtu
+rm -r ITHACAoutput/Reconstruction/VTK
+touch ITHACAoutput/Offline/foam.foam
+touch ITHACAoutput/Reconstruction/foam.foam
+foamToVTK -ascii -time 0 -fields 'none' -no-point-data
+
+if [ ! -d $JS_TEST_DATA ];then
+  mkdir -p $JS_TEST_DATA
+fi
+
+if [ ! -d $JS_TEST_MATRICES ];then
+  mkdir -p $JS_TEST_MATRICES
+fi
+
+cp ITHACAoutput/Matrices/P_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/M_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/K_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/B_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/coeffL2_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/C/C*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/ct1/ct1*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Matrices/ct2/ct2*_mat.txt $JS_TEST_MATRICES/
+cp ITHACAoutput/Parameters/par.txt ${JS_TEST_DATA}/
+cp ITHACAoutput/POD/EigenModes_U_mat.txt ${JS_TEST_DATA}/
+cp VTK/*/internal.vtu ${JS_TEST_DATA}/bump2D.vtu
