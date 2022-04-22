@@ -6,17 +6,21 @@ import rom from '@simzero/rom'
 import Papa from 'papaparse'
 import fs from 'fs'
 
-let U = 3.0;
+let caseName = 'pitzDaily'
+let Ux = 3.0;
+let Uy = 0.0;
 let nu = 1e-05;
 
-if(process.argv[2])
+if (process.argv[2])
 {
-  U = process.argv[2];
-  nu = process.argv[3];
+  caseName = process.argv[2];
+  Ux = process.argv[3];
+  Uy = process.argv[4];
+  nu = process.argv[5];
 }
 
-const rootPath = "../../surrogates/OF/incompressible/simpleFoam/pitzDaily/";
-const outputFile = 'U_' + U + '_nu_' + nu + '.vtu';
+const rootPath = '../../surrogates/OF/incompressible/simpleFoam/' + caseName + "/";
+const outputFile = caseName + '_U_' + Ux + '_' + Uy + '_nu_' + nu + '.vtu';
 
 const loadData = async (dataPath) => {
   const data = await readFile(rootPath + dataPath)
@@ -29,7 +33,7 @@ const readFile = async (filePath) => {
   const csvData = csvFile.toString()
   return new Promise(resolve => {
     Papa.parse(csvData, {
-      delimiter: " ",
+      delimiter: ' ',
       dynamicTyping: true,
       skipEmptyLines: true,
       header: false,
@@ -62,17 +66,17 @@ const dataToVector = (data) => {
 
   await rom.ready
 
-  const N_BC = 1;
+  const N_BC = 2;
 
-  const P = await loadData("matrices/P_mat.txt");
-  const M = await loadData("matrices/M_mat.txt");
-  const K = await loadData("matrices/K_mat.txt");
-  const B = await loadData("matrices/B_mat.txt");
-  const modes = await loadData("EigenModes_U_mat.txt");
+  const P = await loadData('matrices/P_mat.txt');
+  const M = await loadData('matrices/M_mat.txt');
+  const K = await loadData('matrices/K_mat.txt');
+  const B = await loadData('matrices/B_mat.txt');
+  const modes = await loadData('EigenModes_U_mat.txt');
 
-  const coeffL2 = await loadData("matrices/coeffL2_mat.txt");
-  const mu = await loadData("par.txt");
-  const grid_data = fs.readFileSync(rootPath + "pitzDaily.vtu")
+  const coeffL2 = await loadData('matrices/coeffL2_mat.txt');
+  const mu = await loadData('par.txt');
+  const grid_data = fs.readFileSync(rootPath + caseName + '.vtu')
 
   const Nphi_u = B[1];
   const Nphi_p = K[2];
@@ -92,9 +96,9 @@ const dataToVector = (data) => {
   reduced.nu(nu);
 
   for (var i = 0; i < Nphi_u; i ++ ){
-    const C = await loadData("matrices/C" + i + "_mat.txt");
-    const Ct1 = await loadData("matrices/ct1_" + i + "_mat.txt");
-    const Ct2 = await loadData("matrices/ct2_" + i + "_mat.txt");
+    const C = await loadData('matrices/C' + i + '_mat.txt');
+    const Ct1 = await loadData('matrices/ct1_' + i + '_mat.txt');
+    const Ct2 = await loadData('matrices/ct2_' + i + '_mat.txt');
 
     reduced.addCMatrix(C[0], i);
     reduced.addCt1Matrix(Ct1[0], i);
@@ -107,7 +111,7 @@ const dataToVector = (data) => {
   var timeInitialize = endInitialize - startInitialize;
 
   var startSolve = new Date().getTime();
-  reduced.solveOnline(U);
+  reduced.solveOnline(Ux, Uy);
   reduced.reconstruct();
   var endSolve = new Date().getTime();
   var timeSolve = endSolve - startSolve;

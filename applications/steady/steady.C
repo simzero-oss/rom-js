@@ -67,9 +67,16 @@ int main(int argc, char* argv[])
 
     argList::addOption
     (
-        "U",
+        "Ux",
         "value",
-        "Specify a velocity for the online stage"
+        "Specify a Ux velocity for the online stage"
+    );
+
+    argList::addOption
+    (
+        "Uy",
+        "value",
+        "Specify a Uy velocity for the online stage"
     );
 
     argList::addOption
@@ -89,8 +96,12 @@ int main(int argc, char* argv[])
 
     pitzDaily example(argc, argv);
 
-    const double UOnline = args.getOrDefault<scalar>("U", 1);
+    const double UOnlineX = args.getOrDefault<scalar>("Ux", 0.0);
+    const double UOnlineY = args.getOrDefault<scalar>("Uy", 0.0);
     const double nuOnline = args.getOrDefault<scalar>("nu", 1e-05);
+
+    // label patchID = example._mesh().boundaryMesh().findPatchID("inlet");
+    // const bool test = args.found("Uy");
 
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                                example._runTime());
@@ -104,7 +115,7 @@ int main(int argc, char* argv[])
     parametersCount.open("ITHACAoutput/Parameters/par.txt");
     int nParameters = std::count(std::istreambuf_iterator<char>(parametersCount), 
     std::istreambuf_iterator<char>(), '\n');
-    Eigen::MatrixXd par(nParameters, 2);
+    Eigen::MatrixXd par(nParameters, 3);
     std::ifstream parameters;
     parameters.open("ITHACAoutput/Parameters/par.txt");
 
@@ -113,18 +124,25 @@ int main(int argc, char* argv[])
     while (std::getline(parameters, line))
     {
        std::istringstream stream(line);
-       double U, nu;
-       if (!(stream >> U >> nu))
+       double Ux, Uy, nu;
+       if (!(stream >> Ux >> Uy >> nu))
            break;
-        par(k, 0) = U;
-        par(k, 1) = nu;
+        par(k, 0) = Ux;
+        par(k, 1) = Uy;
+        par(k, 2) = nu;
         k++;
     }
 
     example.mu = par;
-    example.inletIndex.resize(1, 2);
+    // example.inletIndex.resize(0, 0);
+    // example.inletIndex.resize(1, 2);
+    // example.inletIndex(0, 0) = 0;
+    // example.inletIndex(0, 1) = 0;
+    example.inletIndex.resize(2, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
+    example.inletIndex(1, 0) = 0;
+    example.inletIndex(1, 1) = 1;
 
     example.offlineSolve();
 
@@ -146,9 +164,10 @@ int main(int argc, char* argv[])
     if (args.found("online"))
     {
         ReducedSteadyNSTurb reduced(example);
-        Eigen::MatrixXd vel_now(1, 1);
         reduced.tauU.resize(1, 1);
-        vel_now(0, 0) = UOnline;
+        Eigen::MatrixXd vel_now(2, 1);
+        vel_now(0, 0) = UOnlineX;
+        vel_now(1, 0) = UOnlineY;
         reduced.nu = nuOnline;
         List<Eigen::MatrixXd> EigenModes = example.L_U_SUPmodes.toEigen();
         Eigen::MatrixXd  EigenModesCoeffs = EigenModes[0].leftCols(reduced.Nphi_u);
