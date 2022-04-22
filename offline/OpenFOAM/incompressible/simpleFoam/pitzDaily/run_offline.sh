@@ -16,7 +16,7 @@ run_case () {
   cd .. && \
   ln -s ../../system system && \
   foamDictionary constant/transportProperties -entry nu -set ${nu_params[$k]} && \
-  foamDictionary inputs -entry U -set ${U_params[$k]} -disableFunctionEntries && \
+  foamDictionary inputs -entry Ux -set ${U_params[$k]} -disableFunctionEntries && \
   foamJob -wait simpleFoam && \
   results_dir=$(foamListTimes -latestTime) && \
   output_dir=$(($k + 1))
@@ -75,7 +75,7 @@ do
     if [ $k -lt $n_params ]; then
       echo "Running $k with U ${U_params[$k]} and nu ${nu_params[$k]}"
       (run_case $k ${U_params[$k]} ${nu_params[$k]}) &
-      echo "${U_params[$k]} ${nu_params[$k]}" >> $param_path/par.txt
+      echo "${U_params[$k]} 0.0 ${nu_params[$k]}" >> $param_path/par.txt
       let "k=k+1"
     fi
   done
