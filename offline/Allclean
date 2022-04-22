@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CORES=$1
+
+(cd OpenFOAM/incompressible/simpleFoam/pitzDaily && ./Allclean)
+(cd OpenFOAM/incompressible/simpleFoam/bump2D && ./Allclean)

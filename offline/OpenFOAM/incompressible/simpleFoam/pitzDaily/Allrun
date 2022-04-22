@@ -10,15 +10,13 @@ JS_TEST=../../../../../tests/pitzDaily
 JS_TEST_DATA=../../../../../surrogates/OF/incompressible/simpleFoam/pitzDaily
 JS_TEST_MATRICES=${JS_TEST_DATA}/matrices
 
-cleanCase
-rm -r ITHACAoutput
-rm -r runs
+restore0Dir
 blockMesh > log.blockMesh 2>&1
 ./run_offline.sh $OFFLINE_CORES
 # TODO: remove redundancies
 mkdir -p ITHACAoutput/Reconstruction
 cp inputs ITHACAoutput/Reconstruction/
-foamJob -screen steady -online -U 1.5 -nu 0.00005
+foamJob -screen steady -online -Ux 1.5 -nu 0.00005
 (cd ITHACAoutput/Reconstruction && \
  rm 0 && \
  ln -s ../../0 0 && \
@@ -27,9 +25,9 @@ foamJob -screen steady -online -U 1.5 -nu 0.00005
  rm system && \
  ln -s ../../system system && \
  mv 1 3 )
-foamJob -screen steady -online -U 10.0 -nu 0.00001
+foamJob -screen steady -online -Ux 10.0 -nu 0.00001
 (cd ITHACAoutput/Reconstruction && mv 1 2)
-foamJob -screen steady -online -U 15.0 -nu 0.0001
+foamJob -screen steady -online -Ux 15.0 -nu 0.0001
 mv 1 U_15_nu_0-0001
 foamToVTK -case ITHACAoutput/Reconstruction
 mv ITHACAoutput/Reconstruction/VTK/Reconstruction_1/internal.vtu U_15.0_nu_0.0001.vtu
