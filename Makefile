@@ -4,12 +4,11 @@
 
 SHELL := /bin/bash
 
-version=v1.0.0-rc.4
+version=v1.0.0-rc.5
 web-wasm := docker run --rm --user=emscripten -it -v ${PWD}:/build -w /build dockcross/web-wasm
 rom-js-image := ghcr.io/simzero-oss/rom-js:$(version)
 rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)
 rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
-pitzDaily-offline := offline/OpenFOAM/incompressible/simpleFoam/pitzDaily
 openfoam-dir := third_party/openfoam/etc/bashrc
 data-url := https://github.com/simzero-oss/rom-js-data/raw/main/$(version).tar.gz
 
@@ -26,14 +25,14 @@ emcc-rom:
 run-build:
 	$(rom-js) npm run build
 rom:
-	$(rom-js-rom) /bin/bash -c "cd /work/$(pitzDaily-offline) && ./Allrun ${CORES}"
+	$(rom-js-rom) /bin/bash -c "cd /work/offline && ./Allrun ${CORES}"
 data:
 	$(rom-js) curl -LJ0 $(data-url) -o surrogates.tar.gz
 	tar -zxvf surrogates.tar.gz -C ./
 test-install:
 	$(rom-js) npm install --prefix tests/pitzDaily
 test-run:
-	$(rom-js) /bin/bash -c "cd tests/pitzDaily && node pitzDaily.mjs 10.0 0.00001 && node pitzDaily.mjs 1.5 0.00005 && node pitzDaily.mjs 15.0 0.0001"
+	$(rom-js) /bin/bash -c "cd tests/steady && ./Allrun"
 compiled-install:
 	npm install
 compiled-non-emcc:
@@ -45,7 +44,7 @@ compiled-emcc-rom:
 compiled-build:
 	TARGET="node" npm run build
 compiled-rom:
-	source $(openfoam-dir) && cd $(pitzDaily-offline) && ./Allrun ${CORES}
+	source $(openfoam-dir) && cd offline && ./Allrun ${CORES}
 compiled-test-install:
 	npm install --prefix tests/pitzDaily
 compiled-test-run:
