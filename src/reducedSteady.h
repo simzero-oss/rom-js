@@ -279,16 +279,19 @@ public:
     }
   }
 
-  void solveOnline(double vel_num) {
+  void solveOnline(double vel_x, double vel_y) {
     VectorXd y(NewtonObject.Nphi_u + NewtonObject.Nphi_p);
     y.setZero();
 
-    y[0] = vel_num;
-    NewtonObject.BC(0) = vel_num;
+    y[0] = vel_x;
+    y[1] = vel_y;
+    NewtonObject.BC(0) = vel_x;
+    NewtonObject.BC(1) = vel_y;
 
-    MatrixXd param(2, 1);
-    param(0, 0) = vel_num;
-    param(1, 0) = NewtonObject.nu;
+    MatrixXd param(3, 1);
+    param(0, 0) = vel_x;
+    param(1, 0) = vel_y;
+    param(2, 0) = NewtonObject.nu;
 
     for (int i = 0; i < NewtonObject.Nphi_nut; i++)
     {
