@@ -1,9 +1,7 @@
 node steady.mjs pitzDaily 10.0 0.0 1e-5
-node steady.mjs pistDaily 1.5 0.0 5e-5
+node steady.mjs pitzDaily 1.5 0.0 5e-5
 node steady.mjs pitzDaily 15.0 0.0 1e-4
 
 node steady.mjs bump2D 5.0 0.0 5e-5
 node steady.mjs bump2D 100.0 0.0 1e-5
 node steady.mjs bump2D 69.44 0.0 2.31e-5
-
-
