@@ -10,7 +10,7 @@ rom-js-image := ghcr.io/simzero-oss/rom-js:$(version)
 rom-js := docker run -e TARGET=${TARGET} -it --entrypoint "" -w /work -v ${PWD}:/work $(rom-js-image)
 rom-js-rom := docker run -e TARGET=${TARGET} -it -w /work -v ${PWD}:/work $(rom-js-image)
 openfoam-dir := third_party/openfoam/etc/bashrc
-data-url := https://github.com/simzero-oss/rom-js-data/raw/main/$(version).tar.gz
+data-url := https://github.com/simzero-oss/cfd-xyz-data/raw/main/surrogates_$(version).tar.gz
 
 all: install emcc-rom run-build
 test: test-install test-run
@@ -26,6 +26,8 @@ run-build:
 	$(rom-js) npm run build
 rom:
 	$(rom-js-rom) /bin/bash -c "cd /work/offline && ./Allrun ${CORES}"
+rom-clean:
+	$(rom-js-rom) /bin/bash -c "cd /work/offline && ./Allclean"
 data:
 	$(rom-js) curl -LJ0 $(data-url) -o surrogates.tar.gz
 	tar -zxvf surrogates.tar.gz -C ./
