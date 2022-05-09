@@ -11,20 +11,8 @@ U               69.44;
 
 nu              2.31e-5;
 
-inletWidth      5.0;
+k               1.08e-3;
 
-mixingLength    #calc "0.1*$inletWidth";
-
-ti              0.00061;
-
-muRatio         0.009;
-
-muRatioInv      #calc "1.0/$muRatio";
-
-uPrime          #calc "$ti * $U";
-
-k               #calc "1.5*pow($uPrime,2)";
-
-omega           #calc "$k*$muRatioInv/$nu";
+omega           5220.8;
 
 // ************************************************************************* //
