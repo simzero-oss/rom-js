@@ -32,7 +32,7 @@ data:
 	$(rom-js) curl -LJ0 $(data-url) -o surrogates.tar.gz
 	tar -zxvf surrogates.tar.gz -C ./
 test-install:
-	$(rom-js) npm install --prefix tests/pitzDaily
+	$(rom-js) npm install --prefix tests/steady
 test-run:
 	$(rom-js) /bin/bash -c "cd tests/steady && ./Allrun"
 compiled-install:
