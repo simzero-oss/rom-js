@@ -267,6 +267,35 @@ Everyone is welcome to contribute to this project. See [CONTRIBUTING.md](https:/
 
 Your donations encourage future developments and help with server costs for providing a better service. If you like the tool you can [:heart: donate](https://www.paypal.com/donate/?hosted_button_id=KKB4LH96E59A4).
 
+## Citation
+
+A technical note related to this work was submitted to the OpenFOAM Journal and it is currently being reviewed. In the meanwhile please use the following bibtex to cite this repository:
+
+- Technical note submitted to the OpenFOAM Journal and under review. Preprint available at arXiv:
+
+```
+@misc{cfd_xyz_note_2022,
+  doi = {10.48550/ARXIV.2205.08387},
+  url = {https://arxiv.org/abs/2205.08387},
+  author = {Peña-Monferrer, Carlos and Díaz-Marín, Carmen},
+  keywords = {Fluid Dynamics (physics.flu-dyn), Numerical Analysis (math.NA), FOS: Physical sciences, FOS: Physical sciences, FOS: Mathematics, FOS: Mathematics},
+  title = {cfd.xyz/rom.js: An open-source framework for generating and visualizing parametric CFD results on the web},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {Creative Commons Attribution Share Alike 4.0 International}
+}
+```
+
+- Repository:
+```
+@online{rom_js_repo_2022,
+  author       = {{SIMZERO}},
+  title = {{cfd.xyz}},
+  howpublished = {\url{https://github.com/simzero-oss/rom-js}},
+  addendum = "(accessed: 28.04.2022)",
+}
+```
+
 ## License
 
 [GNU Lesser General Public License v3.0](https://github.com/simzero-oss/rom-js/blob/main/LICENSE)
