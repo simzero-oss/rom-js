@@ -290,7 +290,7 @@ A technical note related to this work was submitted to the OpenFOAM Journal and 
 ```
 @online{rom_js_repo_2022,
   author       = {{SIMZERO}},
-  title = {{cfd.xyz}},
+  title = {{rom.js}},
   howpublished = {\url{https://github.com/simzero-oss/rom-js}},
   addendum = "(accessed: 28.04.2022)",
 }
