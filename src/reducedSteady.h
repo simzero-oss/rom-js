@@ -105,7 +105,7 @@ struct NewtonSteady: public newton_argument<double>
   vector<SPLINTER::RBFSpline*> rbfSplines;
 
   vtkSmartPointer<vtkUnstructuredGrid> grid =
-    vtkSmartPointer<vtkUnstructuredGrid>::New();
+	  vtkSmartPointer<vtkUnstructuredGrid>::New();
 
   int operator()(const VectorXd &x, VectorXd &fvec) const
   {
@@ -317,7 +317,7 @@ public:
   }
 
   auto unstructuredGridToPolyData() {
-    auto geometryFilter = vtkSmartPointer<vtkGeometryFilter>::New();
+    vtkNew<vtkGeometryFilter> geometryFilter;
     geometryFilter->SetInputData(NewtonObject.grid);
     geometryFilter->Update();
 
@@ -336,7 +336,7 @@ public:
     VectorXd rec = NewtonObject.modes.leftCols(NewtonObject.Nphi_u) *
                           coeffU;
     int nCellsGrid = NewtonObject.grid->GetNumberOfCells();
-    vtkSmartPointer<vtkDoubleArray> velocity = vtkSmartPointer<vtkDoubleArray>::New();
+    vtkNew<vtkDoubleArray> velocity;
     velocity->SetName ("Urec");
     velocity->SetNumberOfComponents(3);
     velocity->SetNumberOfTuples(NewtonObject.grid->GetNumberOfCells());
@@ -350,8 +350,7 @@ public:
         velocity->SetTuple3(i, v1, v2, v3);
     }
  
-    vtkSmartPointer<vtkDoubleArray> velocity_points =
-	    vtkSmartPointer<vtkDoubleArray>::New();
+    vtkNew<vtkDoubleArray> velocity_points;
     velocity_points->SetName ("Urec");
     velocity_points->SetNumberOfComponents(3);
     velocity_points->SetNumberOfTuples(NewtonObject.grid->GetNumberOfPoints());
@@ -359,14 +358,14 @@ public:
     NewtonObject.grid->GetCellData()->AddArray(velocity);
     NewtonObject.grid->GetPointData()->AddArray(velocity_points);
 
-    vtkCellDataToPointData* cellToPoint = vtkCellDataToPointData::New();
+    vtkNew<vtkCellDataToPointData> cellToPoint;
     cellToPoint->ProcessAllArraysOn();
     cellToPoint->SetInputData(NewtonObject.grid);
     cellToPoint->Update();
 
     NewtonObject.grid = cellToPoint->GetUnstructuredGridOutput();
 
-    auto geometryFilter = vtkSmartPointer<vtkGeometryFilter>::New();
+    vtkNew<vtkGeometryFilter> geometryFilter;
     geometryFilter->SetInputConnection(cellToPoint->GetOutputPort());
     geometryFilter->Update();
 

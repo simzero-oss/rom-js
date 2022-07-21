@@ -97,7 +97,7 @@ public:
   }
 
   auto unstructuredGridToPolyData() {
-    auto geometryFilter = vtkSmartPointer<vtkGeometryFilter>::New();
+    vtkNew<vtkGeometryFilter> geometryFilter;
     geometryFilter->SetInputData(grid);
     geometryFilter->Update();
 
